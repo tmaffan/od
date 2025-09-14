@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Royal Sherwani — Index</title>
+  <style>
+    /* ---------- BASIC LAYOUT ---------- */
+    :root{--accent1:#007bff;--accent2:#00c6ff;--green1:#28a745;--red:#dc3545}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:linear-gradient(180deg,#f3f7ff,#ffffff); color:#222}
+    .hidden{display:none!important}
+
+    /* header - improved/responsive layout */
+    .header{
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      padding:14px 18px;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center; /* center main content area horizontally */
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    /* container inside header keeps content width consistent with page */
+    .header-inner{
+      width:100%;
+      max-width:980px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between; /* LEFT = brand, RIGHT = user */
+      gap:16px;
+    }
+
+    /* brand block (left) */
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .brand-title{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+    /* always show full site title — do NOT hide on small screens */
+    .brand-title h1{
+      margin:0;
+      font-size:26px;
+      letter-spacing:0.2px;
+      font-weight:800;
+      line-height:1;
+      /* removed overflow/ellipsis/nowrap so it is always visible */
+    }
+    /* subtitle removed intentionally (no small text) */
+
+    /* user block (right) */
+    .user-block{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-shrink:0;
+      margin-left:auto;
+    }
+    .user-email{
+      background:rgba(255,255,255,0.12);
+      padding:7px 12px;
+      border-radius:12px;
+      font-weight:700;
+      color:#e6ffea;
+      max-width:240px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      font-size:14px;
+    }
+    .logout-btn{
+      background:var(--red);
+      color:#fff;
+      border:none;
+      padding:8px 12px;
+      border-radius:18px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    /* login */
+    .login-wrap{display:flex; align-items:center; justify-content:center; height:78vh}
+    .login-card{width:340px; background:#fff; padding:20px; border-radius:12px; box-shadow:0 10px 30px rgba(2,6,23,0.08); text-align:center}
+    .login-card input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #e6e9ef;font-size:14px}
+    .login-card button{width:100%;padding:12px;border-radius:22px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;font-weight:600;cursor:pointer}
+
+    /* search & create */
+    .wrap{padding:18px 14px}
+    .search-bar{display:flex;justify-content:center;margin:12px 0}
+    .search-bar input{width:94%;max-width:720px;padding:12px 18px;border-radius:30px;border:1px solid #ddd;box-shadow:0 4px 10px rgba(10,20,50,0.03);font-size:15px}
+    #searchResults{list-style:none;padding:0;margin:12px 12px}
+
+    /* search list item */
+    .result-item{background:#fff;padding:12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 20px rgba(30,50,90,0.04);margin-bottom:12px}
+    .result-item .left{font-weight:600}
+    .result-item .right button{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;border:none;padding:8px 12px;border-radius:20px;margin-left:8px;cursor:pointer}
+
+    /* create button */
+    .center{display:flex;justify-content:center;margin:14px 0}
+    .create-btn{background:linear-gradient(90deg,#2bbf7a,#38d27f);color:#fff;padding:16px 26px;border-radius:28px;border:none;font-size:18px;font-weight:700;box-shadow:0 12px 28px rgba(40,180,120,0.12);cursor:pointer}
+
+    /* tiles */
+    .tiles{display:flex;flex-direction:column;gap:18px;padding:18px;max-width:720px;margin:0 auto}
+    @media(min-width:720px){ .tiles{flex-direction:row;justify-content:center} }
+    .tile{background:#fff;padding:26px;border-radius:16px;box-shadow:0 14px 30px rgba(20,40,80,0.05);text-align:center;min-width:220px;cursor:pointer}
+    .tile h3{color:var(--accent1);margin:0;font-size:18px}
+    .tile p{margin:8px 0 0;color:#666}
+
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:120}
+    .modal.show{display:flex}
+    .modal-box{background:#fff;border-radius:16px;padding:18px;width:420px;max-width:94%;max-height:84vh;overflow:auto;box-shadow:0 20px 60px rgba(2,6,23,0.15)}
+    .modal-box h3{text-align:center;margin-top:0;color:var(--accent1)}
+    .modal-box input,.modal-box select{width:100%;padding:10px;border-radius:10px;border:1px solid #e6e9ef;margin:8px 0;font-size:14px}
+    .modal-row{display:flex;gap:8px}
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;border:none;padding:10px 12px;border-radius:12px;cursor:pointer}
+    .btn-green{background:linear-gradient(90deg,#2bbf7a,#38d27f);color:#fff;border:none;padding:10px 12px;border-radius:12px;cursor:pointer}
+    .btn-red{background:var(--red);color:#fff;border:none;padding:10px 12px;border-radius:12px;cursor:pointer}
+
+    /* camera preview */
+    .preview-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .preview-row img{width:70px;height:70px;object-fit:cover;border-radius:8px;box-shadow:0 4px 12px rgba(10,20,40,0.06)}
+
+    /* share panel */
+    .share-pre{background:#f5f7fb;padding:12px;border-radius:10px;white-space:pre-wrap;font-family:monospace}
+
+    /* small helpers */
+    .muted{color:#667788;font-size:13px}
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login-wrap">
+    <div class="login-card">
+      <h2 style="margin:0 0 8px">Royal Sherwani</h2>
+      <form id="loginForm">
+        <input id="email" type="email" placeholder="Email" required />
+        <input id="password" type="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      <p id="loginMsg" class="muted"></p>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div id="mainPage" class="hidden">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <!-- LEFT: Brand (no logo, no subtitle — always show full title) -->
+        <div class="brand" style="min-width:0">
+          <div class="brand-title">
+            <h1>Royal Sherwani</h1>
+          </div>
+        </div>
+
+        <!-- RIGHT: user info -->
+        <div class="user-block" role="region" aria-label="User">
+          <div id="userEmail" class="user-email">guest@royal.com</div>
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="search-bar"><input id="mainSearch" placeholder="Search Booked and Ready Bills (type to search)"/></div>
+
+      <ul id="searchResults"></ul>
+
+      <div class="center"><button id="createBtn" class="create-btn">+ Create Bill</button></div>
+
+      <div class="tiles">
+        <div class="tile" onclick="location.href='section.html?type=Booked'"><h3>Booked</h3><p id="countBooked">0 Bills</p></div>
+        <div class="tile" onclick="location.href='section.html?type=Ready'"><h3>Ready</h3><p id="countReady">0 Bills</p></div>
+        <div class="tile" onclick="location.href='section.html?type=Delivered'"><h3>Delivered</h3><p id="countDelivered">0 Bills</p></div>
+        <!-- ✅ New Sections -->
+        <div class="tile" onclick="location.href='readymade.html'"><h3>Readymade</h3><p id="countReadymade">0 Items</p></div>
+        <div class="tile" onclick="location.href='advance.html'"><h3>Advance</h3><p id="countAdvance">0 Records</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE BILL MODAL -->
+  <div id="createModal" class="modal">
+    <div class="modal-box">
+      <h3>Create Bill</h3>
+      <input id="billNo" type="number" placeholder="Bill Number (numeric)" />
+      <input id="deliveryDate" type="date" />
+
+      <div style="margin-top:8px;font-weight:600">Main Photos</div>
+      <input id="mainFiles" type="file" accept="image/*" multiple style="display:none"/>
+      <div class="modal-row" style="margin-top:8px">
+        <button id="uploadMain" class="btn-primary">📤 Upload Main Photos</button>
+        <button id="captureMain" class="btn-primary">📷 Capture Main</button>
+      </div>
+      <div id="mainPreview" class="preview-row"></div>
+
+      <div style="margin-top:12px;font-weight:600">Measurement Photos</div>
+      <input id="measFiles" type="file" accept="image/*" multiple style="display:none"/>
+      <div class="modal-row" style="margin-top:8px">
+        <button id="uploadMeas" class="btn-primary">📤 Upload Measurement</button>
+        <button id="captureMeas" class="btn-primary">📷 Capture Measurement</button>
+      </div>
+      <div id="measPreview" class="preview-row"></div>
+
+      <div style="margin-top:12px">
+        <label style="display:flex;align-items:center;gap:8px"><input id="directReady" type="checkbox"/> Directly Ready</label>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:6px"><input id="directDelivered" type="checkbox"/> Directly Delivered</label>
+      </div>
+
+      <div id="deliveredExtra" class="hidden" style="margin-top:8px">
+        <input id="amount" type="number" placeholder="Enter Amount" />
+        <select id="method"><option>Cash</option><option>UPI</option><option>Card</option></select>
+        <input id="deliveredDate" type="date" />
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button id="saveBill" class="btn-green" style="flex:1">Save</button>
+        <button id="closeCreate" class="btn-red" style="flex:1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA MODAL -->
+  <div id="cameraModal" class="modal">
+    <div class="modal-box" style="text-align:center">
+      <h3 id="camTitle">Capture Photo</h3>
+      <video id="camVideo" autoplay playsinline style="width:100%;border-radius:8px;background:#111"></video>
+      <canvas id="camCanvas" style="display:none"></canvas>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button id="takePhoto" class="btn-green" style="flex:1">Capture</button>
+        <button id="switchCam" class="btn-primary" style="flex:1">Switch</button>
+        <button id="closeCam" class="btn-red" style="flex:1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE PANEL -->
+  <div id="shareModal" class="modal">
+    <div class="modal-box">
+      <h3>Delivered — Details</h3>
+      <pre id="shareText" class="share-pre"></pre>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button id="copyBtn" class="btn-primary" style="flex:1">Copy</button>
+        <button id="closeShare" class="btn-red" style="flex:1">Close</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js"
+  import Compressor from "https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.esm.js"
+
+  // ---------- SUPABASE CONFIG ----------
+  const SUPABASE_URL = "https://ixjniowbikesfgnqcsza.supabase.co"
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4am5pb3diaWtlc2ZnbnFjc3phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4Nzg2MjksImV4cCI6MjA3MzQ1NDYyOX0.RJpDsYueacmE02JKcpOITE_icpkQGdzaAVvuWKOMEMM"
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  // ---------- STATE ----------
+  let currentUser = null
+  let billsCache = []
+  let cameraStream = null
+  let usingFront = false
+  let cameraTarget = "main" // "main" or "meas"
+  let mainFiles = []    // File objects (from camera or upload)
+  let measFiles = []
+
+  // ---------- UI elems ----------
+  const loginPage = document.getElementById("loginPage")
+  const mainPage = document.getElementById("mainPage")
+  const loginForm = document.getElementById("loginForm")
+  const emailIn = document.getElementById("email")
+  const passIn = document.getElementById("password")
+  const loginMsg = document.getElementById("loginMsg")
+  const userEmail = document.getElementById("userEmail")
+  const logoutBtn = document.getElementById("logoutBtn")
+  const searchInput = document.getElementById("mainSearch")
+  const searchResults = document.getElementById("searchResults")
+  const countBooked = document.getElementById("countBooked")
+  const countReady = document.getElementById("countReady")
+  const countDelivered = document.getElementById("countDelivered")
+  const countReadymade = document.getElementById("countReadymade")
+  const countAdvance = document.getElementById("countAdvance")
+
+  // modal elems
+  const createModal = document.getElementById("createModal")
+  const createBtn = document.getElementById("createBtn")
+  const closeCreate = document.getElementById("closeCreate")
+  const billNoInput = document.getElementById("billNo")
+  const deliveryInput = document.getElementById("deliveryDate")
+  const uploadMainBtn = document.getElementById("uploadMain")
+  const uploadMeasBtn = document.getElementById("uploadMeas")
+  const mainFileInput = document.getElementById("mainFiles")
+  const measFileInput = document.getElementById("measFiles")
+  const mainPreview = document.getElementById("mainPreview")
+  const measPreview = document.getElementById("measPreview")
+  const captureMain = document.getElementById("captureMain")
+  const captureMeas = document.getElementById("captureMeas")
+  const directReady = document.getElementById("directReady")
+  const directDelivered = document.getElementById("directDelivered")
+  const deliveredExtra = document.getElementById("deliveredExtra")
+  const amountInput = document.getElementById("amount")
+  const methodInput = document.getElementById("method")
+  const deliveredDateInput = document.getElementById("deliveredDate")
+  const saveBillBtn = document.getElementById("saveBill")
+
+  // camera modal
+  const cameraModal = document.getElementById("cameraModal")
+  const camVideo = document.getElementById("camVideo")
+  const camCanvas = document.getElementById("camCanvas")
+  const camTitle = document.getElementById("camTitle")
+  const takePhotoBtn = document.getElementById("takePhoto")
+  const switchCamBtn = document.getElementById("switchCam")
+  const closeCamBtn = document.getElementById("closeCam")
+
+  // share panel
+  const shareModal = document.getElementById("shareModal")
+  const shareText = document.getElementById("shareText")
+  const copyBtn = document.getElementById("copyBtn")
+  const closeShare = document.getElementById("closeShare")
+
+  // ---------- helpers ----------
+  function show(el){ el.classList.remove("hidden"); el.classList.add("show") }
+  function hide(el){ el.classList.add("hidden"); el.classList.remove("show") }
+
+  // restore saved email/pass to avoid typing every time
+  emailIn.value = localStorage.getItem("loginEmail") || ""
+  passIn.value = localStorage.getItem("loginPass") || ""
+
+  // ---------- AUTH ----------
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    loginMsg.textContent = "Logging in..."
+    const email = emailIn.value.trim(), pass = passIn.value
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass })
+      if (error) { loginMsg.textContent = error.message; console.error("Login error:", error); return }
+      currentUser = data.user
+      localStorage.setItem("loginEmail", email); localStorage.setItem("loginPass", pass)
+      localStorage.setItem("supabaseUser", JSON.stringify(currentUser))
+      loginMsg.textContent = ""
+      showMain()
+      await refreshCountsAndSearch()
+    } catch (err) {
+      console.error("Login exception:", err); loginMsg.textContent = "Login failed"
+    }
+  })
+
+  // restore session if available
+  const saved = localStorage.getItem("supabaseUser")
+  if (saved) {
+    currentUser = JSON.parse(saved)
+    showMain()
+    refreshCountsAndSearch()
+  }
+
+  function showMain(){
+    loginPage.classList.add("hidden")
+    mainPage.classList.remove("hidden")
+    if (currentUser) userEmail.textContent = currentUser.email
+  }
+
+  logoutBtn.addEventListener("click", async ()=>{
+    await supabase.auth.signOut()
+    localStorage.clear()
+    location.reload()
+  })
+
+  // ---------- DB: counts & load for search (Booked+Ready) ----------
+  async function refreshCountsAndSearch(){
+    if (!currentUser) return
+    try {
+      // counts (fetch statuses for this user)
+      const { data: allBills } = await supabase.from("bills").select("status").eq("user_id", currentUser.id)
+      const arr = allBills || []
+      countBooked.textContent = (arr.filter(b=>b.status==="Booked").length) + " Bills"
+      countReady.textContent = (arr.filter(b=>b.status==="Ready").length) + " Bills"
+      countDelivered.textContent = (arr.filter(b=>b.status==="Delivered").length) + " Bills"
+      // new counts (if your DB uses these statuses)
+      countReadymade.textContent = (arr.filter(b=>b.status==="Readymade").length) + " Items"
+      countAdvance.textContent = (arr.filter(b=>b.status==="Advance").length) + " Records"
+
+      // search pool (original behavior: Booked + Ready)
+      const { data } = await supabase.from("bills").select("*").eq("user_id", currentUser.id).in("status", ["Booked","Ready"])
+      billsCache = data || []
+      console.log("Search pool loaded:", billsCache.length)
+    } catch (err) {
+      console.error("refreshCountsAndSearch err:", err)
+    }
+  }
+
+  // ---------- SEARCH Rendering (only when typed) ----------
+  function renderSearch(q){
+    q = (q || "").toString().trim()
+    searchResults.innerHTML = ""
+    if (!q) return // hide results unless user types
+    const results = (billsCache || []).filter(b => {
+      const bn = b.bill_no ? b.bill_no.toString() : ""
+      const dd = b.delivery_date || ""
+      const deld = b.delivered_date || ""
+      return bn.includes(q) || dd.includes(q) || deld.includes(q)
+    })
+    results.forEach(b => {
+      const li = document.createElement("li"); li.className = "result-item"
+      li.innerHTML = `<div class="left">#${b.bill_no}<div class="muted">${b.delivery_date?('Delivery Date: '+b.delivery_date):''}</div></div>
+                      <div class="right">
+                        <button onclick="openSection(${b.id})">Open</button>
+                        <button onclick="openMove(${b.id})">Move</button>
+                      </div>`
+      searchResults.appendChild(li)
+    })
+  }
+
+  searchInput.addEventListener("input", (e)=> renderSearch(e.target.value))
+
+  // open section (view)
+  window.openSection = (id) => {
+    window.location.href = `section.html?focus=${id}`
+  }
+
+  // FIXED: Move from main -> redirect with both type & action
+  window.openMove = async (id) => {
+    try {
+      console.log("openMove:", id)
+      const { data: bill, error } = await supabase.from("bills").select("status").eq("id", id).single()
+      if (error || !bill) {
+        console.warn("Bill status fetch failed, redirecting generic", error)
+        window.location.href = `section.html?focus=${id}&action=move`
+        return
+      }
+      const st = bill.status || "Booked"
+      // redirect to section with type and action
+      window.location.href = `section.html?type=${encodeURIComponent(st)}&focus=${id}&action=move`
+    } catch (err) {
+      console.error("openMove exception:", err)
+      window.location.href = `section.html?focus=${id}&action=move`
+    }
+  }
+
+  // ---------- CREATE BILL modal logic ----------
+  createBtn.addEventListener("click", ()=> {
+    resetCreateModal(); createModal.classList.add("show"); createModal.classList.remove("hidden")
+  })
+  closeCreate.addEventListener("click", ()=> {
+    createModal.classList.remove("show"); createModal.classList.add("hidden")
+  })
+
+  function resetCreateModal(){
+    billNoInput.value = ""; deliveryInput.value = ""
+    mainFiles = []; measFiles = []; mainPreview.innerHTML = ""; measPreview.innerHTML = ""
+    directReady.checked = false; directDelivered.checked = false; deliveredExtra.classList.add("hidden")
+    amountInput.value=""; methodInput.value="Cash"; deliveredDateInput.value=""
+  }
+
+  // upload button wiring
+  uploadMainBtn.addEventListener("click", ()=> mainFileInput.click())
+  uploadMeasBtn.addEventListener("click", ()=> measFileInput.click())
+
+  mainFileInput.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files || [])
+    files.forEach(f => { mainFiles.push(f); appendPreview(f, mainPreview) })
+  })
+  measFileInput.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files || [])
+    files.forEach(f => { measFiles.push(f); appendPreview(f, measPreview) })
+  })
+
+  function appendPreview(file, container){
+    const url = URL.createObjectURL(file)
+    const img = document.createElement("img"); img.src = url
+    container.appendChild(img)
+  }
+
+  // direct delivered toggle
+  directDelivered.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      deliveredExtra.classList.remove("hidden"); deliveredDateInput.value = new Date().toISOString().split("T")[0]
+    } else deliveredExtra.classList.add("hidden")
+  })
+
+  // ---------- CAMERA logic ----------
+  captureMain.addEventListener("click", ()=> openCamera("main"))
+  captureMeas.addEventListener("click", ()=> openCamera("meas"))
+
+  function openCamera(target){
+    cameraTarget = target
+    camTitle.textContent = target==="main" ? "Capture Main Photo" : "Capture Measurement Photo"
+    cameraModal.classList.add("show"); cameraModal.classList.remove("hidden")
+    startCamera()
+  }
+
+  async function startCamera(){
+    try {
+      if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop())
+      const constraints = { video: { facingMode: usingFront ? "user" : "environment" }, audio: false }
+      cameraStream = await navigator.mediaDevices.getUserMedia(constraints)
+      camVideo.srcObject = cameraStream
+      await camVideo.play()
+    } catch (err) {
+      alert("Camera error: " + err.message); console.error("startCamera", err)
+    }
+  }
+
+  switchCamBtn.addEventListener("click", async ()=>{
+    usingFront = !usingFront
+    if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop())
+    await startCamera()
+  })
+
+  closeCamBtn.addEventListener("click", ()=>{
+    if (cameraStream) cameraStream.getTracks().forEach(t=>t.stop())
+    cameraModal.classList.remove("show"); cameraModal.classList.add("hidden")
+  })
+
+  takePhotoBtn.addEventListener("click", ()=>{
+    camCanvas.width = camVideo.videoWidth; camCanvas.height = camVideo.videoHeight
+    const ctx = camCanvas.getContext("2d"); ctx.drawImage(camVideo, 0, 0, camCanvas.width, camCanvas.height)
+    camCanvas.toBlob(blob => {
+      const f = new File([blob], `capture_${Date.now()}.jpg`, { type: "image/jpeg" })
+      if (cameraTarget === "main") { mainFiles.push(f); appendPreview(f, mainPreview) }
+      else { measFiles.push(f); appendPreview(f, measPreview) }
+      alert("Captured photo added to preview")
+    }, "image/jpeg", 0.9)
+  })
+
+  // ---------- UPLOAD helper (compress + supabase storage) ----------
+  async function uploadAndGetUrls(files, folder){
+    const urls = []
+    for (const f of files) {
+      const compressed = await new Promise(resolve => {
+        try {
+          new Compressor(f, { quality: 0.75, maxWidth: 1600, success(result){ resolve(result) }, error(){ resolve(f) } })
+        } catch(err){ resolve(f) }
+      })
+      const cleanName = f.name.replace(/\s+/g,'_').slice(0,120)
+      const filename = `${Date.now()}_${Math.random().toString(36).slice(2,8)}_${cleanName}`
+      const path = `${currentUser.id}/${folder}/${filename}`
+      try {
+        const { error } = await supabase.storage.from("bill-images").upload(path, compressed, { upsert: false })
+        if (error) { console.error("upload error", error); continue }
+        const { data } = supabase.storage.from("bill-images").getPublicUrl(path)
+        if (data && data.publicUrl) urls.push(data.publicUrl)
+      } catch (err) {
+        console.error("upload exception", err)
+      }
+    }
+    return urls
+  }
+
+  // ---------- SAVE bill ----------
+  saveBillBtn.addEventListener("click", async ()=>{
+    const billNo = billNoInput.value.trim(); const date = deliveryInput.value
+    if (!billNo || !date) { alert("Bill number and delivery date required"); return }
+    saveBillBtn.disabled = true; saveBillBtn.textContent = "Saving..."
+    try {
+      const mainUrls = mainFiles.length ? await uploadAndGetUrls(mainFiles, "main") : []
+      const measUrls = measFiles.length ? await uploadAndGetUrls(measFiles, "measurement") : []
+      let status = "Booked"
+      if (directReady.checked) status = "Ready"
+      let payload = {
+        user_id: currentUser.id,
+        bill_no: billNo,
+        delivery_date: date,
+        status,
+        main_images: mainUrls,
+        measurement_images: measUrls
+      }
+      if (directDelivered.checked) {
+        status = "Delivered"
+        payload.status = "Delivered"
+        payload.amount = amountInput.value
+        payload.method = methodInput.value
+        payload.delivered_date = deliveredDateInput.value || new Date().toISOString().split("T")[0]
+      }
+      const { data, error } = await supabase.from("bills").insert(payload).select().single()
+      if (error) { console.error("insert error", error); alert("Save failed: "+error.message); return }
+      // success
+      alert("Bill created")
+      createModal.classList.remove("show"); createModal.classList.add("hidden")
+      resetCreateModal()
+      await refreshCountsAndSearch()
+      // if delivered show share panel
+      if (data && data.status === "Delivered") {
+        const text = `Bill No: ${data.bill_no}\nAmount: ${data.amount}\nPayment: ${data.method}\nDelivered Date: ${data.delivered_date}`
+        shareText.textContent = text
+        shareModal.classList.add("show"); shareModal.classList.remove("hidden")
+      }
+    } catch (err) {
+      console.error("saveBill err:", err); alert("Error saving bill")
+    } finally {
+      saveBillBtn.disabled = false; saveBillBtn.textContent = "Save"
+    }
+  })
+
+  copyBtn.addEventListener("click", async ()=>{
+    try { await navigator.clipboard.writeText(shareText.textContent); alert("Copied!") } catch { alert("Copy failed") }
+  })
+  closeShare.addEventListener("click", ()=> { shareModal.classList.remove("show"); shareModal.classList.add("hidden") })
+
+  // ---------- initial debug log ----------
+  console.log("Index loaded. Supabase URL:", SUPABASE_URL)
+
+  // ---------- expose for console debugging ----------
+  window._rs = { supabase, refreshCountsAndSearch }
+
+  // ---------- Important: make sure the search pool is loaded after login/restore ------
+  // done by refreshCountsAndSearch called after login/restore
+
+</script>
+</body>
+</html>
